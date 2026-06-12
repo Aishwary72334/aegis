@@ -7,12 +7,12 @@ import interactionPlugin from "@fullcalendar/interaction"
 
 export default function Calendar() {
   const [events, setEvents] = useState(() => {
-  const savedEvents = localStorage.getItem("aegis-events")
+    const savedEvents = localStorage.getItem("aegis-events")
 
-  return savedEvents
-    ? JSON.parse(savedEvents)
-    : []
-})
+    return savedEvents
+      ? JSON.parse(savedEvents)
+      : []
+  })
 
   useEffect(() => {
     localStorage.setItem(
@@ -33,6 +33,25 @@ export default function Calendar() {
 
     setEvents([...events, newEvent])
   }
+
+  const handleEventClick = (info) => {
+    const confirmDelete = window.confirm(
+      `Delete "${info.event.title}"?`
+    )
+
+    if (!confirmDelete) return
+
+    const updatedEvents = events.filter(
+      (event) =>
+        !(
+          event.title === info.event.title &&
+          event.start === info.event.startStr
+        )
+    )
+
+    setEvents(updatedEvents)
+  }
+
   return (
     <>
       <h2 className="text-4xl font-bold mb-6">
@@ -59,6 +78,7 @@ export default function Calendar() {
           height="auto"
           events={events}
           dateClick={handleDateClick}
+          eventClick={handleEventClick}
         />
       </div>
     </>

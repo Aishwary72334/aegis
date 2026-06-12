@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
@@ -6,7 +6,21 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
 
 export default function Calendar() {
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState(() => {
+  const savedEvents = localStorage.getItem("aegis-events")
+
+  return savedEvents
+    ? JSON.parse(savedEvents)
+    : []
+})
+
+  useEffect(() => {
+    localStorage.setItem(
+      "aegis-events",
+      JSON.stringify(events)
+    )
+  }, [events])
+
   const handleDateClick = (info) => {
     const title = prompt("Enter event title")
 

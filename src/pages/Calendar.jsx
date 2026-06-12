@@ -1,9 +1,24 @@
+import { useState } from "react"
+
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
 
 export default function Calendar() {
+  const [events, setEvents] = useState([])
+  const handleDateClick = (info) => {
+    const title = prompt("Enter event title")
+
+    if (!title) return
+
+    const newEvent = {
+      title,
+      start: info.dateStr,
+    }
+
+    setEvents([...events, newEvent])
+  }
   return (
     <>
       <h2 className="text-4xl font-bold mb-6">
@@ -28,6 +43,8 @@ export default function Calendar() {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           height="auto"
+          events={events}
+          dateClick={handleDateClick}
         />
       </div>
     </>
